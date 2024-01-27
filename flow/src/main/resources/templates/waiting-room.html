@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <span>현재 대기 순번 <span id="number">[[${number}]]</span> 입니다</span>
+    <p id = "updated"></p>
+<script>
+    function fetchWaitingRank() {
+        const queue = `[[${queue}]]`;
+        const userId = `[[${userId}]]`;
+        const queuryParam = new URLSearchParams({queue: queue, user_id: userId});
+        fetch('/api/v1/queue/rank?' + queuryParam)
+            .then(response => response.json())
+            .then(data => {
+
+
+                console.log("data"+ data.rank);
+                console.log(data);
+                if(data.rank < 0) {
+                    fetch('/api/v1/queue/touch?' + queuryParam)
+                        .then(response => {
+                            document.querySelector('#number').innerHTML = 0;
+                            document.querySelector('#updated').innerHTML = new Date();
+
+                            const newUrl = window.location.origin + window.location.pathname + window.location.search;
+                            window.location.href = newUrl;
+                        })
+                        .catch(error => console.error(error));
+                    return;
+                }
+
+                document.querySelector('#number').innerHTML = data.rank;
+                document.querySelector('#updated').innerHTML = new Date();
+            })
+            .catch(error => console.error(error));
+    }
+
+    setInterval(fetchWaitingRank, 10000);
+</script>
+
+</body>
+</html>

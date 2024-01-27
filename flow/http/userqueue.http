@@ -1,0 +1,12 @@
+### User Queue
+POST http://localhost:9010/api/v1/queue?user_id=1002
+
+### wait 중인 몇명을 proceed 로 보내라
+POST http://localhost:9010/api/v1/queue/allow?count=10
+
+### User가 proceed 되었는가?
+GET http://localhost:9010/api/v1/queue/allowed?user_id=34
+
+### 대기자 중 user는 몇번째 인가?
+GET http://localhost:9010/api/v1/queue/rank?user_id=32
+
